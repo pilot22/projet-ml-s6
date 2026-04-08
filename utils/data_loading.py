@@ -1,5 +1,5 @@
 import os
-from . import MNIST_DIR
+from config import MNIST_DIR
 
 def retrieve_files(path):
   if not os.path.exists(path):
@@ -13,5 +13,5 @@ def retrieve_files(path):
 def load_mnist_data():
   files = retrieve_files(MNIST_DIR)
 
-  for f in files:
-    print(f)
+if __name__ == "__main__":
+  load_mnist_data()
