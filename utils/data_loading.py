@@ -1,39 +1,21 @@
-import os
 import numpy as np
-from PIL import Image
+from sklearn.datasets import fetch_openml
 
-from utils.config import MNIST_DIR, SEED
+try:
+    from utils.config import SEED
+except ImportError:
+    from config import SEED
 
 
+def load_mnist_data():
+    mnist = fetch_openml('mnist_784', version=1, as_frame=False)
+    X, y = mnist.data / 255.0, mnist.target.astype(int)
 
-def load_mnist_data(test_ratio=0.2):
-    images = []
-    labels = []
+    # Split officiel MNIST : 60k train, 10k test
+    X_train, y_train = X[:60000], y[:60000]
+    X_test, y_test = X[60000:], y[60000:]
 
-    for filename in sorted(os.listdir(MNIST_DIR)):
-        if not filename.endswith(".png"):
-            continue
-
-        # Label extrait du filename : mnist_<label>_<index>.png
-        label = int(filename.split("-")[1])
-
-        # Chargement en niveaux de gris, aplatissement en vecteur de 784
-        img = Image.open(os.path.join(MNIST_DIR, filename)).convert("L")
-        pixels = np.array(img, dtype=np.float64).flatten() / 255.0
-
-        images.append(pixels)
-        labels.append(label)
-
-    X = np.array(images)
-    y = np.array(labels)
-
-    # Shuffle puis split train/test
-    rng = np.random.default_rng(SEED)
-    indices = rng.permutation(len(X))
-    X, y = X[indices], y[indices]
-
-    split = int(len(X) * (1 - test_ratio))
-    return X[:split], y[:split], X[split:], y[split:]
+    return X_train, y_train, X_test, y_test
 
 
 if __name__ == "__main__":
