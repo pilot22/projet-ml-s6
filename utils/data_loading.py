@@ -1,5 +1,6 @@
 import numpy as np
 from sklearn.datasets import fetch_openml
+import matplotlib.pyplot as plt
 
 try:
     from utils.config import SEED
@@ -23,3 +24,9 @@ if __name__ == "__main__":
     print(f"Train : {X_train.shape}, Test : {X_test.shape}")
     print(f"Pixels normalisés : [{X_train.min():.1f}, {X_train.max():.1f}]")
     print(f"Labels : {np.unique(y_train)}")
+    # Affichage d'un exemple
+    image = X_train[15236].reshape(28, 28)
+    plt.imshow(image, cmap='gray')
+    plt.title(f"Label : {y_train[15236]}")
+    plt.axis('off')
+    plt.show()
