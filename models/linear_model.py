@@ -1,4 +1,7 @@
 import numpy as np
+from training.activations import softmax
+from training.loss import cross_entropy_gradient
+
 
 class LinearModel:
     def __init__(self):
@@ -7,5 +10,14 @@ class LinearModel:
 
     def forward(self, X):
         # o = Ax + b pour toutes les images du batch
+        self.X = X
         self.scores = X @ self.A.T + self.b
-        return self.scores
+        self.P = softmax(self.scores)
+        return self.P
+    
+    def backward(self, y, learning_rate):
+        dO = cross_entropy_gradient(self.P, y)  # shape (n, 10)
+        dA = dO.T @ self.X                       # shape (10, 784)
+        db = dO.sum(axis=0)                      # shape (10,)
+        self.A -= learning_rate * dA
+        self.b -= learning_rate * db
