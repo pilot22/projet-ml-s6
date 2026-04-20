@@ -14,5 +14,5 @@ BATCH_SIZE = 64
 EPOCHS = 10
 
 # Architecture MLP (Perceptron Multicouche) à renseigner pour le modele MLP
-# HIDDEN_DIMS_H1 = [nb de neurones]
-# HIDDEN_DIMS_H2 = [nb de neurones 1ere couche, nb de neurones 2e couche]
+HIDDEN_DIMS_H1 = [128]  # [nb de neurones couche cachée 1]
+HIDDEN_DIMS_H2 = [128, 64]  # [nb de neurones 1ere couche, nb de neurones 2e couche]
