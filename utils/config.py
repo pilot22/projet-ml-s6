@@ -11,7 +11,7 @@ SEED = 42
 # Hyperparamètres
 LEARNING_RATE = 0.01
 BATCH_SIZE = 64
-EPOCHS = 10
+EPOCHS = 30
 
 # Architecture MLP (Perceptron Multicouche) à renseigner pour le modele MLP
 HIDDEN_DIMS_H1 = [128]  # [nb de neurones couche cachée 1]

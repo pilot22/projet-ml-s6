@@ -1,6 +1,6 @@
 import numpy as np
-from sklearn.datasets import fetch_openml
 import matplotlib.pyplot as plt
+from sklearn.datasets import fetch_openml
 
 try:
     from utils.config import SEED
@@ -9,13 +9,10 @@ except ImportError:
 
 
 def load_mnist_data():
-    mnist = fetch_openml('mnist_784', version=1, as_frame=False)
+    mnist = fetch_openml('mnist_784', version=1, as_frame=False, parser='liac-arff')
     X, y = mnist.data / 255.0, mnist.target.astype(int)
-
-    # Split officiel MNIST : 60k train, 10k test
     X_train, y_train = X[:60000], y[:60000]
     X_test, y_test = X[60000:], y[60000:]
-
     return X_train, y_train, X_test, y_test
 
 
