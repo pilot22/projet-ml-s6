@@ -7,33 +7,39 @@ Projet de Mathématiques pour le Machine Learning - EFREI Paris, S6 2025-2026.
 
 ```bash
 .
-├── utils/
-│   ├── config.py            # Hyperparamètres et constantes
-│   └── data_loading.py      # Chargement et normalisation MNIST
-├── models/
-│   ├── linear_model.py      # Modèle linéaire multi-classe
-│   └── mlp_model.py         # Perceptron multi-couches
-├── training/
-│   ├── activations.py       # Softmax, ReLU, sigmoid et dérivées
-│   ├── loss.py              # Cross-entropy et gradient
-│   └── trainer.py           # Boucle d'entraînement
-├── evaluation/
-│   ├── metrics.py           # Accuracy, taux d'erreur, matrice de confusion
-│   └── visualization.py     # Prédiction sur image personnelle
-├── main.py                  # Point d'entrée
+├── partie1_mnist/
+│   ├── utils/
+│   │   ├── config.py            # Hyperparamètres et constantes
+│   │   └── data_loading.py      # Chargement et normalisation MNIST
+│   ├── models/
+│   │   ├── linear_model.py      # Modèle linéaire multi-classe
+│   │   └── mlp_model.py         # Perceptron multi-couches
+│   ├── training/
+│   │   ├── activations.py       # Softmax, ReLU, sigmoid et dérivées
+│   │   ├── loss.py              # Cross-entropy et gradient
+│   │   └── trainer.py           # Boucle d'entraînement
+│   ├── evaluation/
+│   │   ├── metrics.py           # Accuracy, taux d'erreur, matrice de confusion
+│   │   └── visualization.py     # Courbes, matrice de confusion, projection 2D
+│   └── main.py                  # Point d'entrée avec menu interactif
+├── partie2_cifar10/
+│   └── main.py
+├── partie3_mammographies/
+│   └── main.py
 ├── requirements.txt
+├── .gitignore
 └── README.md
 ```
 
 ### Dataset
 
-Le dataset MNIST (70 000 images 28×28 en niveaux de gris) est chargé via `sklearn.datasets.fetch_openml`.
-Ce choix permet d'obtenir directement les images en vecteurs de 784 pixels avec les labels associés et le split officiel 60k train / 10k test, sans prétraitement manuel de fichiers PNG (ce qui n'est pas le but du projet).
-Le téléchargement se fait une seule fois, sklearn met les données en cache ensuite.
+Le dataset MNIST (70 000 images 28×28 en niveaux de gris) est chargé via `sklearn.datasets.fetch_openml`
+
+Le premier lancement télécharge automatiquement le dataset (~50 Mo) et le sauvegarde dans `datasets/` au format `.npy`. Les lancements suivants utilisent ce cache local, sans connexion réseau.
 
 ### Visualiser une image du dataset
 
-On peut visualiser une image du dataset avec ce code. N'importe où dans le code, il suffit d'avoir un vecteur de 784 valeurs.
+N'importe où dans le code, il suffit d'avoir un vecteur de 784 valeurs :
 
 ```python
 import matplotlib.pyplot as plt
@@ -41,7 +47,7 @@ from utils.data_loading import load_mnist_data
 
 X_train, y_train, X_test, y_test = load_mnist_data()
 
-index = 42  # changer l'index pour voir une autre image
+index = 42
 img = X_train[index].reshape(28, 28)
 plt.imshow(img, cmap='gray')
 plt.title(f"Label : {y_train[index]}")
@@ -50,22 +56,27 @@ plt.show()
 
 ### Installation
 
-Python 3.12 requis.
+Python 3.11 ou 3.12 requis.
 
 ```bash
-py -3.12 -m pip install -r requirements.txt
+pip install -r requirements.txt
 ```
 
 ### Lancement
 
 ```bash
-py -3.12 main.py
+cd partie1_mnist
+python main.py
 ```
 
-### Résultats (modèle linéaire)
+Un menu interactif permet de choisir le modèle à entraîner et les visualisations à afficher.
 
-| Métrique | Train | Test |
-|---|---|---|
-| Taux d'erreur | 9.69% | 9.09% |
+### Résultats
 
-Config : `lr=0.01`, `batch_size=64`, `epochs=20`.
+| Modèle | Erreur train (10 ep.) | Erreur test (10 ep.) | Erreur train (30 ep.) | Erreur test (30 ep.) |
+|---|---|---|---|---|
+| Linéaire | 9.67% | 9.07% | 8.35% | 8.17% |
+| MLP (H=1, [128]) | 5.91% | 6.00% | 3.40% | 3.90% |
+| MLP (H=2, [128, 64]) | 4.38% | 4.60% | 1.89% | 2.81% |
+
+Config : `lr=0.01`, `batch_size=64`, initialisation de He pour le MLP.
