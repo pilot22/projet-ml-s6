@@ -5,7 +5,7 @@ from training.trainer import train
 from evaluation.metrics import error_rate
 from utils.config import HIDDEN_DIMS_H1, HIDDEN_DIMS_H2
 from evaluation.visualization import plot_loss_curves, plot_misclassified, plot_confusion_matrix, plot_2d_projection
-
+from evaluation.draw_predict import DrawPredict
 
 def run_model(X_train, y_train, X_test, y_test, model, name):
     print(f"\nEntrainement du {name}...")
@@ -30,15 +30,17 @@ def main():
 
     while True:
         print("\n=== Menu ===")
-        print("1. Modele lineaire")
-        print("2. MLP (H=1)")
-        print("3. MLP (H=2)")
-        print("4. Tous les modeles")
+        print("Entrainer un modele")
+        print(" 1. Modele lineaire")
+        print(" 2. MLP (H=1)")
+        print(" 3. MLP (H=2)")
+        print(" 4. Tous les modeles")
         print("5. Afficher les courbes de loss")
         print("6. Afficher les chiffres mal classes")
         print("7. Afficher la matrice de confusion")
         print("8. Afficher la projection 2D")
-        print("9. Quitter")
+        print("9. Dessiner un chiffre")
+        print("10. Quitter")
 
         choix = input("\nChoix : ")
 
@@ -99,6 +101,12 @@ def main():
                             plot_2d_projection(model, X_test, y_test)
 
             case "9":
+                if not trained_models:
+                    print("Aucun modele entraine.")
+                else:
+                    DrawPredict(trained_models)
+            
+            case "10":
                 print("Au revoir !")
                 break
 
